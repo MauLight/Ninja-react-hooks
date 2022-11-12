@@ -1,45 +1,54 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import AddSong from "./addsong";
+import AddArtist from "./addartist";
 
-const SongList = () => {
 
-    const [songs, setSongs] = useState([
-        { title: "Valley of the Damned" },
-        { title: "Everything's Magic" },
-        { title: "The Bard's Song" }
-    ]);
 
-    const [age, setAge] = useState(20)
+const ArtistList = () => {
+
+    const getSongAsync = async () => {
+        let url = 'http://ws.audioscrobbler.com/2.0/?method=chart.gettopartists&api_key=17967bdc5050b58e05accbe92395a792&format=json'
+        let options_get = {
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json'
+            }
+        }
+        try {
+            const response = await fetch(url,options_get);
+            const data = await response.json();
+            console.log(data);
+            setArtists(data.artists.artist)
+            console.log(data.artists.artist)
+        }
+        catch(error) {
+            console.log(error);
+        }
+    };
+
+    const [artists, setArtists] = useState([]);
 
     const handleSong = (title) => {
-        setSongs([...songs, { title }])
+        setArtists([...artists, {name: title}])
     }
 
     useEffect(() => {
-        console.log('song added!', songs)
-    }, [songs]);
-
-    useEffect(() => {
-        console.log('age added!', age)
-    }, [age]);
+        getSongAsync()
+    }, []);
 
     return (
         <div className="song-list">
             <ul className="list-group">
-                {
-                    songs.map((song, i) => {
+                {!!artists && artists.map((artist, i) => {
                         return (
-                            <li key={i} className="list-group-item">{song.title}</li>
+                            <li key={i} className="list-group-item">{artist.name}</li>
                         )
-
                     })
                 }
             </ul>
-            <AddSong addSong={handleSong} />
-            <button className="btn btn-secondary mt-2" onClick={() => setAge(age + 1) }>+1 to Age: {age}</button>
+            <AddArtist addArtist={handleSong} />
         </div>
     );
 }
 
-export default SongList;
+export default ArtistList;
