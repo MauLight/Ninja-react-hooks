@@ -10,7 +10,7 @@ const AddSong = ({ addSong }) => {
     }
 
     return (
-        <div class="form-group">
+        <div className="form-group">
             <form className='mt-3' onSubmit={handleSubmit}>
                 <label>Song Name:</label>
                 <input className='form-control w-25 mx-auto' type='text' value={title} onChange={(e) => setTitle(e.target.value)} required />
